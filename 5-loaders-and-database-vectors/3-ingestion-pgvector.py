@@ -4,12 +4,12 @@ from dotenv import load_dotenv
 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_core.documents import Document
 from langchain_postgres import PGVector
 
 load_dotenv()
-for k in ("GOOGLE_API_KEY", "PGVECTOR_URL", "PGVECTOR_COLLECTION"):
+for k in ("OPENAI_API_KEY", "PGVECTOR_URL", "PGVECTOR_COLLECTION"):
     if not os.getenv(k):
         raise ValueError(f"Please set the {k} environment variable in the .env file")
     
@@ -36,7 +36,7 @@ enriched = [
 
 ids = [f"doc-{i}" for i in range(len(enriched))]
 
-embeddings = GoogleGenerativeAIEmbeddings(model=os.getenv("GOOGLE_MODEL", "gemini-embedding-001"))
+embeddings = OpenAIEmbeddings(model=os.getenv("OPENAI_MODEL", "text-embedding-3-small"))
 
 store = PGVector(
     embeddings=embeddings,
